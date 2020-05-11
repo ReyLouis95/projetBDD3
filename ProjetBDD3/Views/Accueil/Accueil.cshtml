@@ -1,0 +1,91 @@
+﻿@using ProjetBDD3.Models
+@{
+    ViewBag.Title = "Accueil";
+    List<Personnel> listePersonnel = ViewBag.listePersonnel;
+    List<Vol> listeVols = ViewBag.listeVols;
+    List<DepartVol> listeDepartVols = ViewBag.departVol;
+}
+<head>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/dataTables.css" rel="stylesheet">
+
+    <script type="text/javascript" src="~/Scripts/jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="~/Scripts/dataTables.js" defer></script>
+    <script type="text/javascript" src="~/Scripts/Accueil.js"></script>
+</head>
+<body>
+    <h2>Accueil</h2>
+
+    <table id="tablePersonnel" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <td>Matricule</td>
+                <td>Nom</td>
+                <td>Catégorie</td>
+                <td>Fonction</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Personnel personnel in listePersonnel)
+            {
+                <tr>
+                    <td>@personnel.Matricule</td>
+                    <td>@personnel.Nom</td>
+                    <td>@personnel.Categorie</td>
+                    <td>@personnel.Fonction</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    <h3>Procedure Programmer</h3>
+    <p>Ajouter un depart pour un vol deja existant:</p>
+    <label>Choisir le vol:</label>
+    <select id="noVol">
+        @foreach (Vol vol in listeVols)
+        {
+            <option id="@vol.NoVol">@vol.NoVol|Depart: @vol.Depart | Arrivee: @vol.Arrivee</option>
+        }
+    </select>
+    <br />
+    <label>Date de départ:</label>
+    <input type="date" id="datepicker" min="@DateTime.Today.ToString("yyyy-MM-dd")" /><br />
+    <label>Heure de départ:</label>
+    <input type="time" id="time" /> <br />
+    <label>Durée du vol:</label>
+    <input type="number" id="dureeVol" /> <br />
+    <input type="button" value="Valider" id="boutonProgrammer" />
+
+    <h3>Procédure AffecterPersonnel</h3>
+    <p>Ajoute un personnel à un départ de vol:</p>
+    <label>Choisir le départVol:</label>
+    <select id="departVol">
+        @foreach (DepartVol departVol in listeDepartVols)
+        {
+            <option id="@departVol.NoVol" data-date="@departVol.Date">@departVol.NoVol|Date et Heure de départ:@departVol.Date|Durée de vol:@departVol.DureeVol min</option>
+        }
+    </select>
+    <br />
+    <label>Choisir le personnel à affecter:</label>
+    <select id="personnel">
+        @foreach (Personnel personnel in listePersonnel)
+        {
+            <option id="@personnel.Matricule">@personnel.Matricule|@personnel.Nom|@personnel.Categorie|@personnel.Fonction</option>
+        }
+    </select>
+    <br />
+    <input type="button" value="Valider" id="buttonAffecterPersonnel" />
+
+    <h3>Procedure MembresEquipage</h3>
+    <p>Affiche la liste des personnels qui sont membre d'équipage d'un vol</p>
+    <label>Choisir le vol:</label>
+    <select id="membreEquipage">
+        @foreach (DepartVol departVol in listeDepartVols)
+        {
+            <option data-id="@departVol.NoVol" data-date="@departVol.Date">@departVol.NoVol|Date et Heure de départ:@departVol.Date|Durée de vol:@departVol.DureeVol min</option>
+        }
+    </select><br />
+    <input type="button" value="Valider" id="buttonMembresEquipage" />
+    <label>Resultat</label>
+    <p id="resultat"></p>
+</body>
